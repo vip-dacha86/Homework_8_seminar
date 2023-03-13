@@ -1,44 +1,67 @@
 ﻿//  Сформируйте трёхмерный массив из неповторяющихся двузначных чисел. Напишите программу, которая будет построчно выводить массив, 
 //добавляя индексы каждого элемента.
-// 01 02 03 04
-// 12 13 14 05
-// 11 16 15 06
-// 10 09 08 07
+// 66(0,0.0) 25(0,1,0)
+// 34(1,0,0) 41(1,1,0)
+// 27(0,0,1) 90(0,1,1)
+// 26(1,0,1) 55(1,1,1)
+using System;
+using static System.Console;
+Clear();
+Write("Введите введите размеры массива через пробел: ");
+string[] nums = ReadLine().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+int[,,] array = GetArray(new int[] { int.Parse(nums[0]), int.Parse(nums[1]), int.Parse(nums[2]) }, 10, 99);
+PrintArray(array);
 
-int n = 4;
-int[,] sqareMatrix = new int[n, n];
 
-int temp = 1;
-int i = 0;
-int j = 0;
-
-while (temp <= sqareMatrix.GetLength(0) * sqareMatrix.GetLength(1))
+int[,,] GetArray(int[] sizes, int min, int max)
 {
-  sqareMatrix[i, j] = temp;
-  temp++;
-  if (i <= j + 1 && i + j < sqareMatrix.GetLength(1) - 1)
-    j++;
-  else if (i < j && i + j >= sqareMatrix.GetLength(0) - 1)
-    i++;
-  else if (i >= j && i + j > sqareMatrix.GetLength(1) - 1)
-    j--;
-  else
-    i--;
+    int[,,] result = new int[sizes[0], sizes[1], sizes[2]];
+    for (int i = 0; i < result.GetLength(0); i++)
+    {
+        for (int j = 0; j < result.GetLength(1); j++)
+        {
+            int k=0;
+            while(k<result.GetLength(2))
+            {
+                int element=new Random().Next(min, max + 1);
+                if(FindElement(result,element)) continue;
+                result[i, j, k] = element;
+                k++;
+            }
+        }
+    }
+    return result;
 }
 
-WriteArray(sqareMatrix);
 
-void WriteArray (int[,] array)
+bool FindElement(int[,,] array, int el)
 {
-  for (int i = 0; i < array.GetLength(0); i++)
-  {
-    for (int j = 0; j < array.GetLength(1); j++)
+    for (int i = 0; i < array.GetLength(0); i++)
     {
-      if (array[i,j] / 10 <= 0)
-      Console.Write($" {array[i,j]} ");
-
-      else Console.Write($"{array[i,j]} ");
+        for (int j = 0; j < array.GetLength(1); j++)
+        {
+            for (int k = 0; k < array.GetLength(2); k++)
+            {
+                if(array[i, j, k]==el) return true;
+            }
+        }
     }
-    Console.WriteLine();
-  }
+    return false;
+}
+
+void PrintArray(int[,,] array)
+{
+    for (int i = 0; i < array.GetLength(0); i++)
+    {
+        for (int j = 0; j < array.GetLength(1); j++)
+        {
+            for (int k = 0; k < array.GetLength(2); k++)
+            {
+                Write($"{array[i, j, k]} ({i},{j},{k})   ");
+            }
+            WriteLine();
+        }
+        WriteLine();
+    }
+
 }
